@@ -19,13 +19,13 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    # إنشاء build.gradle بشكل صحيح
+    # إنشاء build.gradle إذا كان مفقودًا
     - name: Create build.gradle if not exists
       run: |
         if [ ! -f "build.gradle" ]; then
           echo "Creating build.gradle"
-
-          echo "buildscript {
+          echo "
+buildscript {
     repositories {
         google()
         mavenCentral()
@@ -69,8 +69,7 @@ subprojects {
             }
         }
     }
-}
-" > build.gradle
+}" > build.gradle
         fi
 
     # إنشاء Gradle Wrapper
