@@ -19,7 +19,7 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    # إضافة خطوة لإنشاء build.gradle إذا كان مفقودًا
+    # خطوة لإنشاء build.gradle إذا كان مفقودًا
     - name: Create build.gradle if not exists
       run: |
         if [ ! -f "build.gradle" ]; then
@@ -61,7 +61,7 @@ jobs:
           }" > build.gradle
         fi
 
-    # تأكد من إنشاء Gradle Wrapper بعد إضافة build.gradle
+    # تأكد من إنشاء Gradle Wrapper
     - name: Initialize Gradle Wrapper
       run: |
         if [ ! -f "gradlew" ]; then
