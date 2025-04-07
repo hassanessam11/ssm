@@ -19,27 +19,54 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    # خطوة لتحديث build.gradle في حال عدم احتوائه على google() و mavenCentral()
-    - name: Update build.gradle repositories
-      run: |
-        echo "Updating build.gradle to include google() and mavenCentral()"
-        # تأكد من وجود google() و mavenCentral() في repositories
-        if ! grep -q "google()" build.gradle; then
-          echo "Adding google() repository to build.gradle"
-          sed -i '/repositories {/a \ \ \ \ google()' build.gradle
-        fi
-        if ! grep -q "mavenCentral()" build.gradle; then
-          echo "Adding mavenCentral() repository to build.gradle"
-          sed -i '/repositories {/a \ \ \ \ mavenCentral()' build.gradle
-        fi
-
-    # خطوة لإنشاء Gradle Wrapper مع تهيئة Gradle وإعداد مشروع Android
-    - name: Initialize Gradle project for Android
+    # إضافة خطوة لإنشاء build.gradle إذا كان مفقودًا
+    - name: Create build.gradle if not exists
       run: |
         if [ ! -f "build.gradle" ]; then
-          echo "Creating build.gradle and gradle wrapper for Android project"
-          gradle init --type java-application --overwrite
-          ./gradlew wrapper
+          echo "Creating build.gradle"
+          echo "plugins {
+            id 'com.android.application' version '8.0.2' apply false
+            id 'org.jetbrains.kotlin.android' version '1.7.21' apply false
+          }
+
+          task clean(type: Delete) {
+            delete rootProject.buildDir
+          }
+
+          allprojects {
+            repositories {
+              google()
+              mavenCentral()
+            }
+          }
+
+          subprojects {
+            apply plugin: 'com.android.application'
+            android {
+              compileSdk 33
+              defaultConfig {
+                applicationId 'com.example.smssender'
+                minSdk 21
+                targetSdk 33
+                versionCode 1
+                versionName '1.0'
+              }
+              buildTypes {
+                release {
+                  minifyEnabled false
+                  proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+                }
+              }
+            }
+          }" > build.gradle
+        fi
+
+    # تأكد من إنشاء Gradle Wrapper بعد إضافة build.gradle
+    - name: Initialize Gradle Wrapper
+      run: |
+        if [ ! -f "gradlew" ]; then
+          echo "Creating gradle wrapper"
+          gradle wrapper
         fi
 
     - name: Grant execute permission for gradlew
