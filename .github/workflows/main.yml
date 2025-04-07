@@ -19,13 +19,12 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    # إنشاء build.gradle إذا كان مفقودًا
+    # إنشاء build.gradle إذا كان مفقودًا (Create build.gradle if not exists)
     - name: Create build.gradle if not exists
       run: |
         if [ ! -f "build.gradle" ]; then
           echo "Creating build.gradle"
-          echo "
-buildscript {
+          echo "buildscript {
     repositories {
         google()
         mavenCentral()
