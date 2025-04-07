@@ -19,12 +19,12 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    # إضافة خطوة لإنشاء Gradle Wrapper إذا لم يكن موجودًا
-    - name: Install Gradle Wrapper
+    # خطوة لإنشاء Gradle Wrapper إذا لم يكن موجودًا
+    - name: Initialize Gradle Wrapper
       run: |
         if [ ! -f "./gradlew" ]; then
           echo "Gradle wrapper not found. Creating wrapper."
-          gradle wrapper
+          gradle init --type java-application
         fi
 
     - name: Grant execute permission for gradlew
