@@ -62,6 +62,9 @@ jobs:
             }
           }" > build.gradle
 
+          # تأكد من إنشاء المجلد gradle/wrapper
+          mkdir -p gradle/wrapper
+
           # إنشاء gradle-wrapper.properties
           echo "distributionUrl=https://services.gradle.org/distributions/gradle-8.0.2-bin.zip" > gradle/wrapper/gradle-wrapper.properties
 
