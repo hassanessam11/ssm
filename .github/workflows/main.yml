@@ -19,26 +19,24 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    # خطوة لتثبيت gradle wrapper وإنشاء build.gradle و gradle-wrapper.properties
+    # خطوة لإنشاء Gradle Wrapper مع التحقق من تهيئة Gradle
     - name: Initialize Gradle project
       run: |
-        echo "Creating build.gradle and gradle wrapper"
-        gradle init --type java-application
-        ./gradlew wrapper
+        if [ ! -f "build.gradle" ]; then
+          echo "Creating build.gradle and gradle wrapper"
+          gradle init --type java-application --overwrite
+          ./gradlew wrapper
+        fi
 
-    # منح صلاحية التنفيذ لملف gradlew
     - name: Grant execute permission for gradlew
       run: chmod +x ./gradlew
 
-    # بناء الـ APK
     - name: Build APK
       run: ./gradlew assembleDebug
 
-    # تحقق من وجود الـ APK
     - name: Check APK exists
       run: ls -la app/build/outputs/apk/debug
 
-    # رفع الـ APK كـ artifact
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
